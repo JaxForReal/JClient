@@ -34,6 +34,7 @@ public abstract class HackChatClient extends WebSocketClient{
 
         //make a new thread that pings the server every 10 seconds
         pingThread = new Thread(() -> {
+            //noinspection InfiniteLoopStatement
             while (true) {
                 HackChatClient.this.send("{\"cmd\": \"ping\"}");
                 //System.out.println("pinging");
@@ -119,7 +120,7 @@ public abstract class HackChatClient extends WebSocketClient{
     //sends the message to chat
     public void sendChat(String message) {
         try {
-            String json = mapper.writeValueAsString(new ChatOutputData(message));
+            String json = mapper.writeValueAsString(new ChatOutputJSON(message));
             super.send(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

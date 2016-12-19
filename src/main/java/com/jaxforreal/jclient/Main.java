@@ -3,16 +3,19 @@ package com.jaxforreal.jclient;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Main extends Application {
     private ChatList chatList;
-    private HackChatService chatService;
+    private ChatService chatService;
 
     @Override
     public void start(Stage primaryStage) throws URISyntaxException {
@@ -20,10 +23,16 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(getGui(), 200, 200));
         primaryStage.show();
 
-        chatService = new HackChatService("wss://hack.chat/chat-ws", "jc", "yo", "test");
-        chatService.setOnSucceeded(event -> {
+        chatService = new ChatService(new URI("wss://hack.chat/chat-ws"), "jclient", "yo", "test");
+
+        chatService.getMessageService().setOnSucceeded(event -> {
             chatList.addEntry((ChatMessage) event.getSource().getValue());
-            chatService.restart();
+            chatService.getMessageService().restart();
+        });
+
+        chatService.getInfoService().setOnSucceeded(event -> {
+            System.out.println(event.getSource().getValue().toString());
+            chatService.getInfoService().restart();
         });
         chatService.start();
     }
@@ -55,6 +64,11 @@ public class Main extends Application {
         });
         root.setBottom(messageTextArea);
         root.setCenter(chatList);
+
+        Menu fileMenu = new Menu("File");
+        MenuBar menuBar = new MenuBar(fileMenu);
+        root.setTop(menuBar);
+
         return root;
     }
 }

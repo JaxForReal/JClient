@@ -1,12 +1,13 @@
 package com.jaxforreal.jclient;
 
-public class ChatMessage {
-    public String nick;
-    public String trip;
-    public String text;
-    public long time;
+// encapsulates all the data send in a chat message
+class ChatMessage {
+    final String nick;
+    final String trip;
+    final String text;
+    private final long time;
 
-    public ChatMessage(String nick, String trip, String text, long time) {
+    ChatMessage(String nick, String trip, String text, long time) {
         this.nick = nick;
         this.trip = trip;
         this.text = text;
