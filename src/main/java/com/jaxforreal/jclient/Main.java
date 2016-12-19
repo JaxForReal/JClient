@@ -20,7 +20,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(getGui(), 200, 200));
         primaryStage.show();
 
-        chatService = new HackChatService();
+        chatService = new HackChatService("wss://hack.chat/chat-ws", "jc", "yo", "test");
         chatService.setOnSucceeded(event -> {
             chatList.addEntry((ChatMessage) event.getSource().getValue());
             chatService.restart();

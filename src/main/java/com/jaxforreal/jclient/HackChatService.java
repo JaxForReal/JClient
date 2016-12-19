@@ -17,9 +17,9 @@ public class HackChatService extends Service<ChatMessage> {
     private BooleanProperty isMessageReadyProperty = new SimpleBooleanProperty(false);
     private Property<ChatMessage> chatMessageProperty = new SimpleObjectProperty<>(null);
 
-    public HackChatService () {
+    public HackChatService (String uri, String nick, String pass, String channel) {
         try {
-            client = new HackChatClient(new URI("wss://hack.chat/chat-ws"), "jclient", "yo", "test") {
+            client = new HackChatClient(new URI(uri), nick, pass, channel) {
                 @Override
                 public void onChat(String text, String nick, String trip, long time) {
                     chatMessageProperty.setValue(new ChatMessage(nick, trip, text, time));

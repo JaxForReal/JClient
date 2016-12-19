@@ -4,15 +4,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class ChatList extends VBox {
-    public ChatList() {
+class ChatList extends VBox {
+    ChatList() {
         super(5);
     }
 
-    public void addEntry(ChatMessage message) {
+    void addEntry(ChatMessage message) {
         HBox chatEntry = new HBox(20);
         UserDisplay userDisplay = new UserDisplay(message);
-        chatEntry.getChildren().addAll(userDisplay, new Text(message.text));
+        Text messageDisplay = new Text(message.text);
+        //messageDisplay.set
+
+        chatEntry.getChildren().addAll(userDisplay, messageDisplay);
 
         getChildren().add(chatEntry);
     }
