@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //websocket client for hack.chat
-public abstract class HackChatClient extends WebSocketClient{
+abstract class HackChatClient extends WebSocketClient{
     private final String nick;
     private final String pass;
     private final String channel;
@@ -24,7 +24,7 @@ public abstract class HackChatClient extends WebSocketClient{
     //used to deserialize json
     private final ObjectMapper mapper;
 
-    public HackChatClient(URI uri, String nick, String pass, String channel) {
+    HackChatClient(URI uri, String nick, String pass, String channel) {
         super(uri);
         this.nick = nick;
         this.pass = pass;

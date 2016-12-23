@@ -1,0 +1,26 @@
+.chat-message {
+    -fx-fill: #515151;
+    -fx-font-family: monospace;
+}
+
+.trip-text {
+    -fx-fill: #707070;
+}
+
+.chat-list, .chat-list-inner{
+    -fx-background: #e1e3e8;
+    -fx-border-width: 0px;
+}
+
+/* server messages: */
+.online-set, .online-remove, .online-add  {
+    -fx-fill: mediumseagreen;
+}
+
+.server-info {
+    -fx-fill: goldenrod;
+}
+
+.server-warn {
+    -fx-fill: lightcoral;
+}

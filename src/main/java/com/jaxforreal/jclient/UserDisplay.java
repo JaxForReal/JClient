@@ -1,26 +1,28 @@
 package com.jaxforreal.jclient;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class UserDisplay extends AnchorPane {
+class UserDisplay extends HBox {
 
-    public UserDisplay(ChatMessage message) {
-        super();
+    UserDisplay(ChatMessage message) {
+        super(5);
+        getStyleClass().add("user-display");
+
         Text nickText = new Text(message.nick);
+        nickText.getStyleClass().add("nick-text");
+
         Text tripText = new Text(message.trip);
+        tripText.getStyleClass().add("trip-text");
+
         nickText.setFill(getHashedColor(message.nick));
-        tripText.setFill(Color.DARKGREY);
         getChildren().addAll(tripText, nickText);
 
-        setLeftAnchor(tripText, 5d);
-        setTopAnchor(tripText, 0d);
-
-        setRightAnchor(nickText, 5d);
-        setTopAnchor(nickText, 0d);
-
-        setPrefWidth(100);
+        setAlignment(Pos.TOP_RIGHT);
+        setPrefWidth(150);
     }
 
     private Color getHashedColor(String text) {

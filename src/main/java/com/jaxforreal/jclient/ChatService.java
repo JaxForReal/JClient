@@ -8,11 +8,11 @@ import java.util.Map;
 
 //exposes the hackChatClient in a JavaFX threadsafe way
 class ChatService {
-    private Service<ChatMessage> messageService;
+    private final Service<ChatMessage> messageService;
 
-    private Service<Map<String, Object>> infoService;
+    private final Service<Map<String, Object>> infoService;
 
-    private HackChatClient client;
+    private final HackChatClient client;
 
     private ChatMessage newMessage;
 

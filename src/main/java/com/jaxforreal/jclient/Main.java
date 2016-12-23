@@ -7,11 +7,18 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Main extends Application {
     private ChatList chatList;
@@ -20,7 +27,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws URISyntaxException {
         primaryStage.setTitle("J Client for hack.chat");
-        primaryStage.setScene(new Scene(getGui(), 200, 200));
+        primaryStage.setScene(getGui());
         primaryStage.show();
 
         chatService = new ChatService(new URI("wss://hack.chat/chat-ws"), "jclient", "yo", "test");
@@ -31,9 +38,10 @@ public class Main extends Application {
         });
 
         chatService.getInfoService().setOnSucceeded(event -> {
-            System.out.println(event.getSource().getValue().toString());
+            chatList.innerContainer.getChildren().add(getInfoText((Map<String, Object>) event.getSource().getValue()));
             chatService.getInfoService().restart();
         });
+
         chatService.start();
     }
 
@@ -42,13 +50,22 @@ public class Main extends Application {
         launch(args);
     }
 
-    public Parent getGui() {
+    @Override
+    public void stop() throws Exception {
+        System.exit(0);
+    }
+
+    private Scene getGui() {
         BorderPane root = new BorderPane();
+        //root.getStyleClass().add("root");
+
         chatList = new ChatList();
 
         TextArea messageTextArea = new TextArea();
+        messageTextArea.getStyleClass().add("message-input-text-area");
         messageTextArea.setPrefRowCount(2);
         messageTextArea.setWrapText(true);
+
         messageTextArea.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 if (event.isShiftDown()) {
@@ -62,6 +79,7 @@ public class Main extends Application {
                 }
             }
         });
+
         root.setBottom(messageTextArea);
         root.setCenter(chatList);
 
@@ -69,6 +87,38 @@ public class Main extends Application {
         MenuBar menuBar = new MenuBar(fileMenu);
         root.setTop(menuBar);
 
-        return root;
+        Scene scene = new Scene(root, 200, 200);
+        scene.getStylesheets().add("style.css");
+
+        return scene;
+    }
+
+    private Text getInfoText(Map<String, Object> data) {
+        Text infoText = new Text();
+        //infoText.getStyleClass().add("server-message");
+
+        switch ((String) data.get("cmd")) {
+            case "onlineAdd":
+                infoText.setText(data.get("nick") + " joined");
+                infoText.getStyleClass().add("online-add");
+                break;
+            case "onlineRemove":
+                infoText.setText(data.get("nick") + " left");
+                infoText.getStyleClass().add("online-remove");
+                break;
+            case "onlineSet":
+                infoText.setText("Online users: " + ((List<String>) data.get("nicks")).stream().collect(Collectors.joining(", ")));
+                infoText.getStyleClass().add("online-set");
+                break;
+            case "info":
+                infoText.setText((String) data.get("text"));
+                infoText.getStyleClass().add("server-info");
+                break;
+            case "warn":
+                infoText.setText((String) data.get("text"));
+                infoText.getStyleClass().add("server-warn");
+                break;
+        }
+        return infoText;
     }
 }
