@@ -68,7 +68,6 @@ abstract class HackChatClient extends WebSocketClient{
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        System.out.println("websocket opened");
         //send the command to join specified channel
         String joinMessage = "{\"cmd\": \"join\", \"channel\": \"" + channel + "\", \"nick\": \"" + nick + "#" + pass + "\"}";
         send(joinMessage);

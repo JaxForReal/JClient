@@ -1,0 +1,13 @@
+make online user list
+
+make a chatroom its own encapsulated object, so you can join multiple channels w/ tabs
+should have its own chatservice and handle all of that stuff
+
+add a config tab, with options to change signature
+
+add join dialog to prompt for username and stuff
+
+latex popup on mouseover
+
+follow links
+mention usernames

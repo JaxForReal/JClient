@@ -9,15 +9,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-class ChatList extends ScrollPane {
-    VBox innerContainer;
+class MessageList extends ScrollPane {
+    final VBox innerContainer;
 
-    ChatList() {
+    MessageList() {
         super();
-        getStyleClass().addAll("chat-list");
+        getStyleClass().addAll("message-list");
 
         innerContainer = new VBox(5);
-        innerContainer.getStyleClass().add("chat-list-inner");
+        innerContainer.getStyleClass().add("message-list-inner");
 
         setContent(innerContainer);
         setVbarPolicy(ScrollBarPolicy.ALWAYS);

@@ -5,7 +5,7 @@ class ChatMessage {
     final String nick;
     final String trip;
     final String text;
-    private final long time;
+    final long time;
 
     ChatMessage(String nick, String trip, String text, long time) {
         this.nick = nick;
