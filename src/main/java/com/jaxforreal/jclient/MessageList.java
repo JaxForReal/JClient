@@ -3,20 +3,27 @@ package com.jaxforreal.jclient;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 class MessageList extends ScrollPane {
-    final VBox innerContainer;
+    final GridPane innerContainer;
+
+    //this is the row that the next message will be inserted into
+    int nextGridRow = 0;
 
     MessageList() {
         super();
         getStyleClass().addAll("message-list");
 
-        innerContainer = new VBox(5);
+        innerContainer = new GridPane();
         innerContainer.getStyleClass().add("message-list-inner");
 
         setContent(innerContainer);
@@ -25,23 +32,38 @@ class MessageList extends ScrollPane {
 
         //scroll to bottom when a new message is added
         innerContainer.getChildren().addListener((ListChangeListener<Node>) c -> {
+            //only scroll if bar is already at the bottom
             if(getVvalue() == 1.0) {
                 layout();
                 setVvalue(1);
             }
         });
         innerContainer.setPadding(new Insets(5));
-
+        innerContainer.setHgap(10);
+        innerContainer.setVgap(5);
     }
 
-    void addEntry(ChatMessage message) {
-        HBox chatEntry = new HBox(20);
+    void addMessage(ChatMessage message) {
+
         UserDisplay userDisplay = new UserDisplay(message);
-        Text chatMessage = new Text(message.text);
-        chatMessage.getStyleClass().add("chat-message");
+        Text textDisplay = new Text(message.text);
+        textDisplay.getStyleClass().add("chat-message");
 
-        chatEntry.getChildren().addAll(userDisplay, chatMessage);
+        GridPane.setConstraints(userDisplay, 0, nextGridRow);
+        GridPane.setConstraints(textDisplay, 1, nextGridRow);
 
-        innerContainer.getChildren().add(chatEntry);
+        nextGridRow ++;
+
+        innerContainer.getChildren().addAll(userDisplay, textDisplay);
+
+        textDisplay.wrappingWidthProperty().bind(widthProperty().subtract(250));
+    }
+
+    //add text to messagelist that is not a chat-message (not associated with a nickname)
+    void addOtherText(Node newNode) {
+        GridPane.setConstraints(newNode, 1, nextGridRow);
+        innerContainer.getChildren().add(newNode);
+
+        nextGridRow ++;
     }
 }

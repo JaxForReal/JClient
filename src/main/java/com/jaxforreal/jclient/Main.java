@@ -14,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws URISyntaxException {
         primaryStage.setTitle("J Client for hack.chat");
 
-        Chat chat = new Chat("cancer_client", "asdasd", "test");
+        Chat chat = new Chat("client", "asdasd", "test");
         Scene scene = new Scene(chat, 200, 200);
 
         scene.getStylesheets().add("style.css");
