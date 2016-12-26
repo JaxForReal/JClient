@@ -47,6 +47,9 @@ class Chat extends BorderPane {
     }
 
     private void setupFunctionality(String nick, String pass, String channel) throws URISyntaxException {
+        //setPrefWidth(Double.MAX_VALUE);
+        //setPrefHeight(Double.MAX_VALUE);
+
         messageList = new MessageList();
 
         //set up input text box
@@ -151,9 +154,7 @@ class Chat extends BorderPane {
         return infoText;
     }
 
-    void addUserToList(String nick) {
-        Text newUserText = new Text(nick);
-        newUserText.setFill(Util.getHashedColor(nick));
-        userList.getChildren().add(newUserText);
+    private void addUserToList(String nick) {
+        userList.getChildren().add(new UserDisplay(nick));
     }
 }

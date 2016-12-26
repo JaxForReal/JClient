@@ -44,17 +44,21 @@ class MessageList extends ScrollPane {
     }
 
     void addMessage(ChatMessage message) {
+        //a HBox to put trip next to nick
+        HBox nickTripBox = new HBox(5);
+        Text tripText = new Text(message.trip);
+        UserDisplay userDisplay = new UserDisplay(message.nick);
+        nickTripBox.getChildren().addAll(tripText, userDisplay);
 
-        UserDisplay userDisplay = new UserDisplay(message);
         Text textDisplay = new Text(message.text);
         textDisplay.getStyleClass().add("chat-message");
 
-        GridPane.setConstraints(userDisplay, 0, nextGridRow);
+        GridPane.setConstraints(nickTripBox, 0, nextGridRow);
         GridPane.setConstraints(textDisplay, 1, nextGridRow);
 
         nextGridRow ++;
 
-        innerContainer.getChildren().addAll(userDisplay, textDisplay);
+        innerContainer.getChildren().addAll(nickTripBox, textDisplay);
 
         textDisplay.wrappingWidthProperty().bind(widthProperty().subtract(250));
     }
