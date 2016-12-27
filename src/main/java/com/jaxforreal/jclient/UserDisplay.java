@@ -1,15 +1,22 @@
 package com.jaxforreal.jclient;
 
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 class UserDisplay extends Text {
+    private TextArea messageInput;
+    private String nick;
 
-    UserDisplay(String nick) {
+    UserDisplay(String nick, TextArea messageInput) {
         super(nick);
+        this.nick = nick;
+        this.messageInput = messageInput;
         getStyleClass().add("user-display");
 
         setFill(Util.getHashedColor(nick));
+
+        setOnMouseClicked(mouseEvent -> messageInput.appendText("@" + nick + " "));
     }
 
     private Color getHashedColor(String text) {
@@ -25,5 +32,9 @@ class UserDisplay extends Text {
         double g = ((double) ((byte) (hash >>> 16) & 0xFF)) / 255;
         double b = ((double) ((byte) (hash >>> 8) & 0xFF)) / 255;
         return new Color(r, g, b, 1);
+    }
+
+    public String getNick() {
+        return nick;
     }
 }

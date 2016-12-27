@@ -2,6 +2,16 @@
     -fx-fill: #515151;
 }
 
+.katex {
+    -fx-font-style: italic;
+    -fx-fill: #909090;
+}
+
+.user-display:hover, .katex:hover {
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+
 .trip-text {
     -fx-fill: #707070;
 }

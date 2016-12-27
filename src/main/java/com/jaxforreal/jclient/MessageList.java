@@ -3,25 +3,28 @@ package com.jaxforreal.jclient;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.util.List;
+
 class MessageList extends ScrollPane {
-    final GridPane innerContainer;
-
+    private final GridPane innerContainer;
+    private final Chat parentChat;
     //this is the row that the next message will be inserted into
-    int nextGridRow = 0;
+    private int nextGridRow = 0;
+    private TextTransformer transformer;
 
-    MessageList() {
+    MessageList(Chat parentChat) {
         super();
         getStyleClass().addAll("message-list");
+
+        this.parentChat = parentChat;
+        this.transformer = new TextTransformer(parentChat);
 
         innerContainer = new GridPane();
         innerContainer.getStyleClass().add("message-list-inner");
@@ -47,20 +50,17 @@ class MessageList extends ScrollPane {
         //a HBox to put trip next to nick
         HBox nickTripBox = new HBox(5);
         Text tripText = new Text(message.trip);
-        UserDisplay userDisplay = new UserDisplay(message.nick);
+        UserDisplay userDisplay = new UserDisplay(message.nick, parentChat.messageTextArea);
         nickTripBox.getChildren().addAll(tripText, userDisplay);
 
-        Text textDisplay = new Text(message.text);
-        textDisplay.getStyleClass().add("chat-message");
+        TextFlow text = transformer.transform(message.text);
 
         GridPane.setConstraints(nickTripBox, 0, nextGridRow);
-        GridPane.setConstraints(textDisplay, 1, nextGridRow);
+        GridPane.setConstraints(text, 1, nextGridRow);
 
         nextGridRow ++;
 
-        innerContainer.getChildren().addAll(nickTripBox, textDisplay);
-
-        textDisplay.wrappingWidthProperty().bind(widthProperty().subtract(250));
+        innerContainer.getChildren().addAll(nickTripBox, text);
     }
 
     //add text to messagelist that is not a chat-message (not associated with a nickname)

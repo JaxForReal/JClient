@@ -3,8 +3,7 @@ package com.jaxforreal.jclient;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -20,12 +19,18 @@ public class Main extends Application {
 
         VBox root = new VBox();
         chatsPane = new TabPane();
+        //make tabs fill the rest of the vbox
+        VBox.setVgrow(chatsPane, Priority.ALWAYS);
         root.getChildren().addAll(getMenuBar(), chatsPane);
+
 
         Scene scene = new Scene(root, 200, 200);
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        root.layout();
+        addChat(new Chat("harambeClientXD", "kek", "test"));
     }
 
 
@@ -46,7 +51,7 @@ public class Main extends Application {
         MenuItem joinPrivate = new MenuItem("Private Chat...");
         join.getItems().addAll(joinChannel, joinPrivate);
 
-        joinChannel.setOnAction(event -> {
+        joinChannel.setOnAction(joinActionEvent -> {
             VBox root = new VBox(5);
 
             Stage infoPrompt = new Stage();
@@ -63,11 +68,10 @@ public class Main extends Application {
             root.getChildren().addAll(nickField, passField, chanField);
 
             Button submit = new Button("Join");
-            submit.setOnAction(event1 -> {
+            submit.setOnAction(submitEvent -> {
                 Chat newChat = new Chat(nickField.getText(), passField.getText(), chanField.getText());
-                chatsPane.getTabs().add(new Tab(chanField.getText(), newChat));
+                addChat(newChat);
                 infoPrompt.close();
-                newChat.connect();
             });
 
             root.getChildren().add(submit);
@@ -77,5 +81,13 @@ public class Main extends Application {
 
         bar.getMenus().add(join);
         return bar;
+    }
+
+    void addChat(Chat chat) {
+        Tab newChatTab = new Tab(chat.channel + " @" + chat.nick);
+        newChatTab.setContent(chat);
+        newChatTab.setOnClosed(closeEvent -> chat.getWebsocketService().getClient().close());
+        chatsPane.getTabs().add(newChatTab);
+        chat.connect();
     }
 }

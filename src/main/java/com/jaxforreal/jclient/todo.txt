@@ -10,6 +10,7 @@ add join dialog to prompt for username and stuff
 latex popup on mouseover
 
 follow links
-mention usernames
 
 god damn text wrapping
+
+concurrent mod exception
