@@ -4,72 +4,90 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class TextTransformer {
+class TextTransformer {
     private Chat parentChat;
-    private Pattern latexPattern = Pattern.compile("\\$[^$]*\\$");
+    private Pattern latexPattern = Pattern.compile("\\s?\\$[^$]*\\$\\s?");
 
-    public TextTransformer(Chat parentChat) {
+    TextTransformer(Chat parentChat) {
         this.parentChat = parentChat;
     }
 
+    //this takes message text and transforms it into richtext (TextFlow) with latex and stuff like that
     TextFlow transform(String text) {
-        TextFlow flow = processKatex(text);
-        processWordTransforms(flow);
-        return flow;
-    }
+        Matcher latexMatcher = latexPattern.matcher(text);
 
-    TextFlow processKatex(String text) {
-        TextFlow outputFlow = new TextFlow();
-        Matcher matcher = latexPattern.matcher(text);
+        //this separates latex parts into their own Word object
+        List<Word> latexSplit = new ArrayList<>();
 
-        //where the last matcher.find() left off
-        int previousEnd = 0;
-
-        while (matcher.find()) {
-            //non-katex string
-            Text unmatched = new Text(text.substring(previousEnd, matcher.start()));
-            unmatched.getStyleClass().add("plain-text");
-
-            Text matched = new Text("(katex)");
-            matched.getStyleClass().add("katex");
-            //display katex source as tooltip
-            Tooltip katexSource = new Tooltip(matcher.group());
-            Tooltip.install(matched, katexSource);
-            matched.setOnMouseClicked(e -> parentChat.messageTextArea.appendText(matcher.group()));
-
-
-            outputFlow.getChildren().addAll(unmatched, matched);
-            previousEnd = matcher.end();
+        //where the last regex find ended
+        int lastFindEndLocation = 0;
+        while (latexMatcher.find()) {
+            latexSplit.add(new Word(false, text.substring(lastFindEndLocation, latexMatcher.start())));
+            latexSplit.add(new Word(true, latexMatcher.group().trim()));
+            lastFindEndLocation = latexMatcher.end();
         }
 
-        //add final non-katex bit
-        outputFlow.getChildren().add(new Text(text.substring(previousEnd, text.length())));
+        latexSplit.add(new Word(false, text.substring(lastFindEndLocation, text.length())));
 
-        return outputFlow;
+        //this separates latex and normal words (space separated)
+        List<Word> fullSplit = new ArrayList<>();
+
+        //split non-latex words into their parts and add to fullSplit
+        //do nothing to latex words, and add straight away
+        latexSplit.forEach(word -> {
+            if (word.isLatex) {
+                fullSplit.add(word);
+            } else {
+                Arrays.stream(word.text.split(" "))
+                        .forEach(innerWord -> fullSplit.add(new Word(false, innerWord)));
+            }
+        });
+
+        //map words to text nodes using getTextNode()
+        TextFlow output = new TextFlow();
+        output.getChildren().addAll(fullSplit.stream().map(this::getTextNode).collect(Collectors.toList()));
+        return output;
     }
 
-    //todo kms
-    private void processWordTransforms(TextFlow input) {
-        input.getChildren().stream()
-                //only check plain text parts
-                .filter(child -> child.getStyleClass().contains("plain-text"))
-                .map(child -> (Text) child)
-                .forEach(textNode -> {
+    private Text getTextNode(Word word) {
+        word.text += " ";
 
-                });
+        if (word.isLatex) {
+            return getLatexTextNode(word.text);
+        } else if (isUserOnline(word.text.trim())) {
+            return getUserTextNode(word.text);
+        } else {
+            return new Text(word.text);
+        }
     }
 
-    private Text processSingleWord(String text) {
-        return null;
+    private Text getLatexTextNode(String string) {
+        Text text = new Text("latex ");
+        Tooltip latexTooltip = new Tooltip(string);
+        Tooltip.install(text, latexTooltip);
+
+        text.getStyleClass().add("latex");
+        return text;
     }
 
-    boolean isUserOnline(String user) {
-        System.out.println("check");
+    private Text getUserTextNode(String user) {
+        user = user.trim();
+
+        //remove @ prefix if applicable
+        user = user.startsWith("@") ? user.substring(1) : user;
+        return new UserDisplay(user, parentChat.messageTextArea);
+    }
+
+    private boolean isUserOnline(String user) {
+        //remove @ prefix if applicable
+        user = user.startsWith("@") ? user.substring(1) : user;
         for (String onlineUser : parentChat.onlineUsernames) {
             if (onlineUser.equalsIgnoreCase(user)) {
                 System.out.println(user);
@@ -77,5 +95,15 @@ public class TextTransformer {
             }
         }
         return false;
+    }
+
+    private class Word {
+        boolean isLatex;
+        String text;
+
+        Word(boolean isLatex, String text) {
+            this.isLatex = isLatex;
+            this.text = text;
+        }
     }
 }

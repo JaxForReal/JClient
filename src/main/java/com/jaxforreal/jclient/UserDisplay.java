@@ -9,13 +9,12 @@ class UserDisplay extends Text {
     private String nick;
 
     UserDisplay(String nick, TextArea messageInput) {
-        super(nick);
+        super(nick + " ");
         this.nick = nick;
         this.messageInput = messageInput;
         getStyleClass().add("user-display");
 
         setFill(Util.getHashedColor(nick));
-
         setOnMouseClicked(mouseEvent -> messageInput.appendText("@" + nick + " "));
     }
 

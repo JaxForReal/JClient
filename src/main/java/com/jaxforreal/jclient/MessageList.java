@@ -4,13 +4,10 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
-import java.util.List;
 
 class MessageList extends ScrollPane {
     private final GridPane innerContainer;
@@ -33,10 +30,10 @@ class MessageList extends ScrollPane {
         setVbarPolicy(ScrollBarPolicy.ALWAYS);
         setHbarPolicy(ScrollBarPolicy.NEVER);
 
-        //scroll to bottom when a new message is added
+        //scroll to bottom when a new message is add
         innerContainer.getChildren().addListener((ListChangeListener<Node>) c -> {
             //only scroll if bar is already at the bottom
-            if(getVvalue() == 1.0) {
+            if (getVvalue() == 1.0) {
                 layout();
                 setVvalue(1);
             }
@@ -58,7 +55,7 @@ class MessageList extends ScrollPane {
         GridPane.setConstraints(nickTripBox, 0, nextGridRow);
         GridPane.setConstraints(text, 1, nextGridRow);
 
-        nextGridRow ++;
+        nextGridRow++;
 
         innerContainer.getChildren().addAll(nickTripBox, text);
     }
@@ -68,6 +65,6 @@ class MessageList extends ScrollPane {
         GridPane.setConstraints(newNode, 1, nextGridRow);
         innerContainer.getChildren().add(newNode);
 
-        nextGridRow ++;
+        nextGridRow++;
     }
 }
