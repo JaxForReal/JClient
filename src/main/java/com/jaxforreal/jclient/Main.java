@@ -30,7 +30,7 @@ public class Main extends Application {
         primaryStage.show();
 
         root.layout();
-        addChat(new Chat("harambeClientXD", "kek", "test"));
+        addChat(new Chat("t_e_s_t", "kek", "test"));
     }
 
 
@@ -83,7 +83,7 @@ public class Main extends Application {
         return bar;
     }
 
-    void addChat(Chat chat) {
+    private void addChat(Chat chat) {
         Tab newChatTab = new Tab(chat.channel + " @" + chat.nick);
         newChatTab.setContent(chat);
         newChatTab.setOnClosed(closeEvent -> chat.getWebsocketService().getClient().close());

@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 //encapsulates a full chat interface for a specific channel
@@ -21,6 +22,7 @@ class Chat extends BorderPane {
 
     List<String> onlineUsernames = new ArrayList<>();
     String nick;
+    @SuppressWarnings("WeakerAccess")
     String pass;
     String channel;
 
@@ -28,6 +30,8 @@ class Chat extends BorderPane {
 
     private boolean readyToChat = false;
     TextArea messageTextArea;
+
+    private Stack<String> sentMessagesStack = new Stack<>();
 
     Chat(String nick, String pass, String channel) {
         this.nick = nick;
@@ -77,10 +81,14 @@ class Chat extends BorderPane {
                     if (readyToChat) {
                         //submit text on enter & clear input
                         getWebsocketService().getClient().sendChat(messageTextArea.getText());
+                        //add sent message to history
+                        sentMessagesStack.push(messageTextArea.getText());
                         messageTextArea.setText("");
                     }
                     event.consume();
                 }
+            } else if ((event.getCode() == KeyCode.UP) && (messageTextArea.getCaretPosition() == 0) && !sentMessagesStack.isEmpty()) {
+                messageTextArea.setText(sentMessagesStack.pop());
             }
         });
 

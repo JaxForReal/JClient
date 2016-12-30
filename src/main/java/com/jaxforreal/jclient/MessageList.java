@@ -2,6 +2,7 @@ package com.jaxforreal.jclient;
 
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
@@ -28,7 +29,7 @@ class MessageList extends ScrollPane {
 
         setContent(innerContainer);
         setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        setHbarPolicy(ScrollBarPolicy.NEVER);
+        setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
         //scroll to bottom when a new message is add
         innerContainer.getChildren().addListener((ListChangeListener<Node>) c -> {
@@ -47,10 +48,13 @@ class MessageList extends ScrollPane {
         //a HBox to put trip next to nick
         HBox nickTripBox = new HBox(5);
         Text tripText = new Text(message.trip);
+        tripText.getStyleClass().add("trip-text");
         UserDisplay userDisplay = new UserDisplay(message.nick, parentChat.messageTextArea);
         nickTripBox.getChildren().addAll(tripText, userDisplay);
+        nickTripBox.setAlignment(Pos.TOP_RIGHT);
 
         TextFlow text = transformer.transform(message.text);
+        text.prefWidthProperty().bind(widthProperty().subtract(250));
 
         GridPane.setConstraints(nickTripBox, 0, nextGridRow);
         GridPane.setConstraints(text, 1, nextGridRow);
