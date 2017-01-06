@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+//this takes message text and transforms it into richtext (TextFlow) with latex and stuff like that
+//currently a mess of regex and Lists of stuff, need to refactor
 class TextTransformer {
     private Chat parentChat;
     private Pattern latexPattern = Pattern.compile("\\s?\\$[^$]*\\$\\s?");
@@ -19,7 +21,6 @@ class TextTransformer {
         this.parentChat = parentChat;
     }
 
-    //this takes message text and transforms it into richtext (TextFlow) with latex and stuff like that
     TextFlow transform(String text) {
         Matcher latexMatcher = latexPattern.matcher(text);
 

@@ -10,6 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+//This is the main pane in a Chat node. It is the vertical list of messages people have sent,
+//including their nicks and trips on the side.
+//needs to be passed the parentChat so it can use the messageinput, etc.
 class MessageList extends ScrollPane {
     private final GridPane innerContainer;
     private final Chat parentChat;
@@ -65,6 +68,7 @@ class MessageList extends ScrollPane {
     }
 
     //add text to messagelist that is not a chat-message (not associated with a nickname)
+    //aka info text like join/leave
     void addOtherText(Node newNode) {
         GridPane.setConstraints(newNode, 1, nextGridRow);
         innerContainer.getChildren().add(newNode);

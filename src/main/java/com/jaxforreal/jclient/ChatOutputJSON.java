@@ -1,6 +1,7 @@
 package com.jaxforreal.jclient;
 
 //gets serialized to JSON to send messages
+//ONLY used for JSON serialization, dont use this class as an API
 class ChatOutputJSON {
     @SuppressWarnings("unused")
     public final String cmd = "chat";

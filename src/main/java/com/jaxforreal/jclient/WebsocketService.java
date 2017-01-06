@@ -8,6 +8,9 @@ import java.net.URI;
 import java.util.Map;
 
 //exposes the hackChatClient in a JavaFX threadsafe way
+//The messageService produces a new ChatMessage Object on SUCCEEDED state
+//the infoService produces a Map<String, Object> which is the raw output of JSON deserialization of the incoming message
+//the connectTask goes to SUCCEEDED state when the websocket finishes connecting
 class WebsocketService {
     private final Service<ChatMessage> messageService;
     private final Service<Map<String, Object>> infoService;

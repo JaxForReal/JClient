@@ -4,6 +4,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+//This is a color-coded Text node for a user's nickname
+//mentions the user in a message when clicked
 class UserDisplay extends Text {
     private TextArea messageInput;
     private String nick;

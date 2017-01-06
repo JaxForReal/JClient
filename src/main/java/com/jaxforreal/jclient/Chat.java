@@ -15,7 +15,8 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-//encapsulates a full chat interface for a specific channel
+//encapsulates a full chat interface for a specific channel and nick
+//includes list of users and message input
 class Chat extends BorderPane {
     private MessageList messageList;
     private VBox userList;

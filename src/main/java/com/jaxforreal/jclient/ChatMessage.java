@@ -1,6 +1,6 @@
 package com.jaxforreal.jclient;
 
-// encapsulates all the data send in a chat message
+//all of the data recieved from hack.chat server when a chat message comes in
 class ChatMessage {
     final String nick;
     final String trip;

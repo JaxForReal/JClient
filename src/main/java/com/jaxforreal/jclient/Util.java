@@ -3,6 +3,8 @@ package com.jaxforreal.jclient;
 import javafx.scene.paint.Color;
 
 class Util {
+
+    //gets a color deterministically from a string
     static Color getHashedColor(String text) {
         int hash = text.hashCode();
         /*
