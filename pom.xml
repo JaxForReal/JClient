@@ -17,6 +17,21 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.0.2</version>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>src/</classpathPrefix>
+                        <mainClass>com.jaxforreal.jclient.Main</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+
         </plugins>
     </build>
     <dependencies>

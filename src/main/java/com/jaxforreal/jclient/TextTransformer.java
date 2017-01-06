@@ -90,7 +90,6 @@ class TextTransformer {
         user = user.startsWith("@") ? user.substring(1) : user;
         for (String onlineUser : parentChat.onlineUsernames) {
             if (onlineUser.equalsIgnoreCase(user)) {
-                System.out.println(user);
                 return true;
             }
         }

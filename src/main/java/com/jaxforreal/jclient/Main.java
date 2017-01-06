@@ -30,7 +30,7 @@ public class Main extends Application {
         primaryStage.show();
 
         root.layout();
-        addChat(new Chat("t_e_s_t", "kek", "test"));
+        addChat(new Chat("jaxClient", "kek", "botDev"));
     }
 
 

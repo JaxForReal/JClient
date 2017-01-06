@@ -15,7 +15,10 @@ class UserDisplay extends Text {
         getStyleClass().add("user-display");
 
         setFill(Util.getHashedColor(nick));
-        setOnMouseClicked(mouseEvent -> messageInput.appendText("@" + nick + " "));
+        setOnMouseClicked(mouseEvent -> {
+            messageInput.appendText("@" + nick + " ");
+            messageInput.requestFocus();
+        });
     }
 
     private Color getHashedColor(String text) {
