@@ -84,7 +84,7 @@ public class Main extends Application {
     }
 
     private void addChat(Chat chat) {
-        Tab newChatTab = new Tab(chat.channel + " @" + chat.nick);
+        Tab newChatTab = new Tab(chat.nick + "@" + chat.channel);
         newChatTab.setContent(chat);
         newChatTab.setOnClosed(closeEvent -> chat.getWebsocketService().getClient().close());
         chatsPane.getTabs().add(newChatTab);

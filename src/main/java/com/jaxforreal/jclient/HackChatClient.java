@@ -41,8 +41,8 @@ abstract class HackChatClient extends WebSocketClient{
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
+                    System.out.println("This might be normal....?");
                     e.printStackTrace();
-                    HackChatClient.this.close();
                 }
             }
         });
@@ -78,6 +78,7 @@ abstract class HackChatClient extends WebSocketClient{
     @Override
     public void onClose(int i, String s, boolean b) {
         pingThread.interrupt();
+        //System.out.println("onClose");
     }
 
     @Override

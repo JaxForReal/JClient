@@ -4,7 +4,11 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -57,7 +61,39 @@ class MessageList extends ScrollPane {
         nickTripBox.setAlignment(Pos.TOP_RIGHT);
 
         TextFlow text = transformer.transform(message.text);
-        text.prefWidthProperty().bind(widthProperty().subtract(250));
+        //text.prefWidthProperty().bind(widthProperty().subtract(250));
+        MenuItem copy = new MenuItem("Copy");
+        copy.setOnAction(event -> {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(message.text);
+            Clipboard.getSystemClipboard().setContent(content);
+        });
+
+        MenuItem viewSource = new MenuItem("View Source");
+        viewSource.setOnAction(viewSourceEvent -> {
+            //replace the rich text with a single text that is the raw message
+            innerContainer.getChildren().remove(text);
+            Text sourceText = new Text(message.text);
+            GridPane.setConstraints(sourceText, 1, GridPane.getRowIndex(text));
+            innerContainer.getChildren().add(sourceText);
+
+            //make a context menu for the new sourceText
+            ContextMenu sourceContextMenu = new ContextMenu(copy);
+            sourceText.setOnContextMenuRequested(
+                    sourceContextMenuEvent -> sourceContextMenu.show(
+                            sourceText,
+                            sourceContextMenuEvent.getScreenX(),
+                            sourceContextMenuEvent.getScreenY()
+                    )
+            );
+
+        });
+
+        ContextMenu textMenu = new ContextMenu(copy, viewSource);
+        text.setOnContextMenuRequested(event -> {
+            textMenu.show(text, event.getScreenX(), event.getScreenY());
+        });
+
 
         GridPane.setConstraints(nickTripBox, 0, nextGridRow);
         GridPane.setConstraints(text, 1, nextGridRow);

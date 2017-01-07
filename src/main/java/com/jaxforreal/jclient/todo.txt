@@ -5,4 +5,11 @@ follow links
 god damn text wrapping
 
 api for custom / builtin text transforms
-- how to deal with textflow?
+
+menu to add triggers and auto responses
+
+fix bug with people joining and leaving from userlist
+
+perf at large message size?
+message deletion?
+
